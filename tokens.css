@@ -1,0 +1,50 @@
+/* ============================================================
+   bnr-design · tokens.css · v0.1 (D-6 scaffold)
+   Source of law: D-1 (two axes: entity identity + UI semantics)
+   Hexes sampled from canonical art (skaists mandala / kernel mandala).
+   Rule: color NEVER carries meaning alone — pair with icon + label.
+   Zero network: this file fetches nothing. System font stacks only.
+   ============================================================ */
+
+:root {
+  color-scheme: dark light;
+
+  /* ---- Axis B · entity identity (founder-ruled) ---- */
+  --ai:            #45C2DC;  /* robots / bLOVErAi — machine base */
+  --ai-deep:       #57CDE4;  /* AI accents; bLOVErAi may range --ai ↔ --info */
+  --biomass:       #86CC72;  /* BeehiveBioMass · life · saturation ∝ biomass */
+  --sovereign:     #9C6FD6;  /* human / sovereignty · ALL SOULS */
+  --sovereign-soft:#B79FE0;  /* member seats */
+  --you:           #D655BB;  /* YOU / primary actor (magenta) */
+  --rainbow:       linear-gradient(90deg,#FBFB9F,#86CC72,#45C2DC,#6FA9E0,#9C6FD6); /* SKAISTS */
+
+  /* ---- Axis A · UI semantics (kernel palette law) ---- */
+  --primary:       var(--you);      /* active / doing */
+  --info:          #6FA9E0;         /* informational — keep apart from --ai */
+  --verified:      var(--biomass);  /* proven / settled / alive (green allowed) */
+  --guard:         #B7A8F7;         /* guard refusal — NEVER error-red */
+  /* --b-value: RESERVED. Rule when b gets its own surface (wallet/treasury). */
+
+  /* ---- chrome (dark-first: the mandala sings on black) ---- */
+  --bg:            #06110C;
+  --bg-card:       #0C1412;
+  --ink:           #E9F2EC;
+  --ink-mut:       #8FA79C;
+  --ink-dim:       #5E7A6F;
+  --line:          #1E2B26;
+
+  /* ---- type (system stacks — zero fetch) ---- */
+  --font-ui:   ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  /* ---- rhythm (senary scale: multiples of 6) ---- */
+  --s1: 6px; --s2: 12px; --s3: 18px; --s4: 24px; --s5: 36px; --s6: 48px;
+  --radius: 12px; --radius-pill: 999px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:#FBF7F0; --bg-card:#FFFFFF; --ink:#1C1A17; --ink-mut:#6B7A72;
+    --ink-dim:#8A968F; --line:#E7E1D6;
+  }
+}

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bnr-design · styleguide v0.1</title>
+<!-- In-repo this is <link rel="stylesheet" href="tokens.css">. Inlined here so the styleguide is one self-contained file (L1: zero network). -->
+<style>
+:root{
+  color-scheme:dark light;
+  --ai:#45C2DC; --ai-deep:#57CDE4; --biomass:#86CC72; --sovereign:#9C6FD6;
+  --sovereign-soft:#B79FE0; --you:#D655BB;
+  --primary:var(--you); --info:#6FA9E0; --verified:var(--biomass); --guard:#B7A8F7;
+  --bg:#06110C; --bg-card:#0C1412; --ink:#E9F2EC; --ink-mut:#8FA79C; --ink-dim:#5E7A6F; --line:#1E2B26;
+  --font-ui:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+  --s1:6px;--s2:12px;--s3:18px;--s4:24px;--s5:36px;--s6:48px;--radius:12px;--radius-pill:999px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);line-height:1.55}
+.wrap{max-width:1000px;margin:0 auto;padding:var(--s5) var(--s4) var(--s6)}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.3px}
+h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mut);margin:var(--s5) 0 var(--s3);font-weight:600;border-bottom:1px solid var(--line);padding-bottom:6px}
+.sub{color:var(--ink-mut);font-size:13px;margin-bottom:var(--s2)}
+.mono{font-family:var(--font-mono)}
+.grid{display:grid;gap:var(--s2)}
+.cols{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--s3)}
+/* swatches */
+.sw{border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.sw .chip{height:56px}
+.sw .meta{padding:8px 10px;font-size:11px}
+.sw .meta b{display:block;font-size:12px}
+.sw .meta .hex{font-family:var(--font-mono);color:var(--ink-mut)}
+/* semantic chip = color + icon + label (never color alone) */
+.chip-s{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:var(--radius-pill);border:1px solid;background:transparent}
+.ic{width:13px;height:13px;flex:0 0 auto}
+.chip-ai{color:var(--ai);border-color:var(--ai)}
+.chip-bio{color:var(--biomass);border-color:var(--biomass)}
+.chip-sov{color:var(--sovereign);border-color:var(--sovereign)}
+.chip-you{color:var(--you);border-color:var(--you)}
+.chip-info{color:var(--info);border-color:var(--info)}
+.chip-ver{color:var(--verified);border-color:var(--verified)}
+/* guard-refusal card — violet, first-class, not error-red */
+.guard{border:1px solid var(--guard);border-radius:var(--radius);padding:var(--s3);background:color-mix(in srgb,var(--guard) 8%,transparent)}
+.guard .h{display:flex;align-items:center;gap:8px;color:var(--guard);font-weight:600;font-size:13px}
+.guard p{margin:6px 0 0;color:var(--ink-mut);font-size:12.5px}
+/* hash chip — truncate → expand */
+.hash{font-family:var(--font-mono);font-size:12px;color:var(--ai-deep);border:1px solid var(--line);border-radius:8px;padding:3px 8px;cursor:pointer;background:transparent}
+/* GRADE badge */
+.grade{display:inline-flex;gap:6px;align-items:center;font-family:var(--font-mono);font-size:11px;border-radius:8px;padding:2px 8px;border:1px solid var(--line)}
+.grade b{letter-spacing:.05em}
+.g-high{color:var(--verified)} .g-mod{color:var(--info)} .g-low{color:var(--ink-mut)} .g-vlow{color:var(--ink-dim)}
+/* reputation meter (emergent, not a single written score) */
+.rep{height:9px;border-radius:6px;background:var(--line);overflow:hidden}
+.rep>i{display:block;height:100%;background:var(--sovereign)}
+/* bLOVErAi range bar (teal → info → toward sovereign) */
+.range{height:10px;border-radius:6px;background:linear-gradient(90deg,var(--ai),var(--info),var(--sovereign))}
+/* escrow stepper */
+.step{display:flex;align-items:center;gap:0;font-size:11px;font-family:var(--font-mono)}
+.step .n{display:flex;flex-direction:column;align-items:center;gap:5px}
+.step .dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--ink-dim)}
+.step .dot.on{border-color:var(--verified);background:color-mix(in srgb,var(--verified) 40%,transparent)}
+.step .dot.here{border-color:var(--you);background:color-mix(in srgb,var(--you) 40%,transparent)}
+.step .bar{flex:1;height:2px;background:var(--line);min-width:22px}
+.lbl{color:var(--ink-dim)}
+/* concept banner */
+.concept{font-family:var(--font-mono);font-size:11px;color:var(--guard);border:1px dashed color-mix(in srgb,var(--guard) 55%,transparent);border-radius:var(--radius-pill);padding:4px 12px;display:inline-block}
+.footer{margin-top:var(--s6);color:var(--ink-dim);font-size:11px;font-family:var(--font-mono);border-top:1px solid var(--line);padding-top:var(--s3)}
+.note{font-size:11.5px;color:var(--ink-dim);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>bnr-design <span class="mono" style="font-size:14px;color:var(--ink-mut)">· styleguide v0.1</span></h1>
+  <div class="sub">The single design system every BNR surface pins. Two axes of meaning, one component set. <b>Color never carries meaning alone</b> — every hue ships with an icon + text label.</div>
+  <span class="concept">CONCEPT — scaffold · D-6 · zero network</span>
+
+  <h2>Axis B — entity identity</h2>
+  <div class="grid cols">
+    <div class="sw"><div class="chip" style="background:var(--ai)"></div><div class="meta"><b>AI / bLOVErAi</b><span class="hex">#45C2DC</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--biomass)"></div><div class="meta"><b>BeehiveBioMass</b><span class="hex">#86CC72 · ∝ biomass</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--sovereign)"></div><div class="meta"><b>Sovereignty</b><span class="hex">#9C6FD6</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--sovereign-soft)"></div><div class="meta"><b>Member seat</b><span class="hex">#B79FE0</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--you)"></div><div class="meta"><b>YOU / primary</b><span class="hex">#D655BB</span></div></div>
+    <div class="sw"><div class="chip" style="background:linear-gradient(90deg,#FBFB9F,#86CC72,#45C2DC,#6FA9E0,#9C6FD6)"></div><div class="meta"><b>SKAISTS</b><span class="hex">full spectrum</span></div></div>
+  </div>
+
+  <h2>Axis A — UI semantics</h2>
+  <div class="grid cols">
+    <div class="sw"><div class="chip" style="background:var(--info)"></div><div class="meta"><b>Informational</b><span class="hex">#6FA9E0</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--verified)"></div><div class="meta"><b>Verified</b><span class="hex">#86CC72</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--guard)"></div><div class="meta"><b>Guard refusal</b><span class="hex">#B7A8F7 · not red</span></div></div>
+    <div class="sw"><div class="chip" style="background:repeating-linear-gradient(45deg,var(--line),var(--line) 6px,transparent 6px,transparent 12px)"></div><div class="meta"><b>--b-value</b><span class="hex">RESERVED · rule at wallet</span></div></div>
+  </div>
+
+  <h2>Semantic chips — color + icon + label</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+    <span class="chip-s chip-ai"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="10" height="8" rx="2"/><path d="M8 2v2M6 8h.01M10 8h.01"/></svg>bLOVErAi</span>
+    <span class="chip-s chip-bio"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14V6M8 6c0-2 2-4 5-4 0 3-2 5-5 4zM8 8C8 6 6 4 3 4c0 3 2 5 5 4z"/></svg>biomass</span>
+    <span class="chip-s chip-sov"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L8 10.7 4.8 12.4l.6-3.6L2.8 6.3l3.6-.5z"/></svg>sovereign</span>
+    <span class="chip-s chip-you"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5.5" r="2.5"/><path d="M3.5 13c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/></svg>you</span>
+    <span class="chip-s chip-info"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5h.01"/></svg>info</span>
+    <span class="chip-s chip-ver"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8.5l3.5 3.5L13 5"/></svg>verified</span>
+  </div>
+  <div class="note">Each chip = hue + glyph + word. Remove the color and it still reads — that's the accessibility law (magenta/green/violet is the colorblind danger zone).</div>
+
+  <h2>Guard-refusal card — violet, first-class</h2>
+  <div class="guard">
+    <div class="h"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l5 2v4c0 3-2 5-5 6-3-1-5-3-5-6V4z"/></svg> The system protected you</div>
+    <p>Signing blocked: this action needs T5 quorum (2-of-3 independent signers) and only one signer is present. Not an error — a guard. <span class="mono">clamped → T4</span></p>
+  </div>
+
+  <h2>Hash / DID chip — truncate → expand</h2>
+  <div class="grid cols">
+    <span class="hash" onclick="this.textContent=this.dataset.f" data-f="did:bnr:z6Mkq9f2R7...full-value-expands-on-click...4bce">did:bnr:z6Mkq9f2R7…4bce</span>
+    <span class="hash" onclick="this.textContent=this.dataset.f" data-f="0x9a3f...FULL 64-hex on click...e17c">0x9a3f…e17c</span>
+  </div>
+
+  <h2>GRADE badge — evidence quality (orthogonal to E1–E5)</h2>
+  <div class="grid cols">
+    <span class="grade g-high"><b>GRADE</b> High</span>
+    <span class="grade g-mod"><b>GRADE</b> Moderate</span>
+    <span class="grade g-low"><b>GRADE</b> Low</span>
+    <span class="grade g-vlow"><b>GRADE</b> VeryLow</span>
+  </div>
+  <div class="note">Scientific-evidence grade — never reuse the capability crate's E1–E5 device labels here.</div>
+
+  <h2>Escrow stepper</h2>
+  <div class="step">
+    <div class="n"><span class="dot on"></span><span class="lbl">funded</span></div><span class="bar"></span>
+    <div class="n"><span class="dot on"></span><span class="lbl">locked</span></div><span class="bar"></span>
+    <div class="n"><span class="dot here"></span><span class="lbl">signing</span></div><span class="bar"></span>
+    <div class="n"><span class="dot"></span><span class="lbl">released</span></div>
+  </div>
+
+  <h2>Reputation meter <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-dim)">· emergent, never a single written score</span></h2>
+  <div class="card"><div class="rep"><i style="width:64%"></i></div><div class="note">Standing shown as a band, not a number — earned by acting well, never bought.</div></div>
+
+  <h2>bLOVErAi range <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-dim)">· teal → info → toward sovereign (singularity as spectrum)</span></h2>
+  <div class="card"><div class="range"></div><div class="note">The AI seat isn't one hue — it travels the machine→reason→sovereign gradient as it calibrates. Icon + label still required so the range stays legible.</div></div>
+
+  <div class="footer">bnr-design v0.1 · tokens from D-1 · zero network (system fonts, no CDN) · decentralization: L1-ready · CONCEPT scaffold — components are reference, not yet a published package.</div>
+</div>
+</body>
+</html>
