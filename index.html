@@ -48,7 +48,50 @@ h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-
 .rep{height:9px;border-radius:6px;background:var(--line);overflow:hidden}
 .rep>i{display:block;height:100%;background:var(--sovereign)}
 /* bLOVErAi range bar (teal → info → toward sovereign) */
-.range{height:10px;border-radius:6px;background:linear-gradient(90deg,var(--ai),var(--info),var(--sovereign))}
+/* --flow, not 90deg: this gradient encodes a PROGRESSION (machine → reason →
+   sovereign). A progression that keeps sweeping left-to-right on an RTL page
+   reads backwards to its reader — the bar would claim the AI is calibrating
+   away from sovereignty. Decorative gradients may or may not mirror; a gradient
+   carrying an ordering must. */
+.range{height:10px;border-radius:6px;background:linear-gradient(var(--flow),var(--ai),var(--info),var(--sovereign))}
+/* reserved-token hatch — decorative texture, mirrored only for consistency */
+.sw .chip.reserved{background:repeating-linear-gradient(var(--hatch),var(--line),var(--line) 6px,transparent 6px,transparent 12px)}
+/* D-13 · bidi isolation.
+   A machine string (hex, DID, hash, GRADE) is LTR content, and on an RTL page
+   it sits inside an RTL paragraph. The Unicode bidi algorithm resolves the
+   NEUTRAL characters at its EDGES — '#', '+', a trailing '…' — against the
+   SURROUNDING direction, not the string's own. Unisolated, '#45C2DC' renders
+   '45C2DC#' and '0x9a3f…' strands its ellipsis at the far end: the value is not
+   corrupted in the DOM, only displayed wrong, which is the dangerous kind of
+   wrong for an identifier a human is asked to eyeball.
+   Note the word EDGES. The chips below truncate in the MIDDLE
+   ('did:bnr:z6Mkq9f2R7…4bce'), which puts the ellipsis between alphanumerics
+   and leaves a strong 'd' anchoring the front — so these particular strings are
+   safe with or without the rule. The rule is applied anyway, because the class
+   of string is what is being protected and the next identifier added here will
+   not be checked by hand.
+   The rule is the PAIR, and neither half works alone — this was measured, not
+   assumed:
+     · isolate alone  — the element stops leaking into its neighbours, but its
+       own direction is still inherited RTL, so the run lays out against an RTL
+       base. Measured: '+3 b' rendered with '+' to the RIGHT of 'b'. Strings
+       carrying strong Latin letters ('#45C2DC') survive by accident, because a
+       strong character anchors the run; a numeral-plus-unit has no anchor and
+       breaks. Passing on the strings that happen to have letters is exactly how
+       this rule ships half-done.
+     · direction alone — internal order is right, but the element still takes
+       part in the surrounding bidi context and can be reordered against it.
+   So: direction fixes the INSIDE, isolate fixes the OUTSIDE. Belt and braces
+   with <bdi> in the markup, which carries isolation even if CSS is lost. */
+.hex,.hash,.mono,bdi{direction:ltr;unicode-bidi:isolate}
+/* .grade is deliberately NOT forced to ltr — only isolated. 'GRADE' is a proper
+   noun that never translates, but 'High'/'Moderate'/'Low' are ordinary words
+   that will, so their order must follow the reader's locale rather than ours.
+   Same rule as below, applied one level finer: pin what is bytes, let go of
+   what is language. */
+.grade{unicode-bidi:isolate}
+/* the toggle exists so the RTL gate tests THESE bytes, not a copy of them */
+.dirtog{font-family:var(--font-mono);font-size:11px;color:var(--ink-mut);background:transparent;border:1px solid var(--line);border-radius:var(--radius-pill);padding:4px 12px;cursor:pointer;margin-inline-start:var(--s2)}
 /* escrow stepper */
 .step{display:flex;align-items:center;gap:0;font-size:11px;font-family:var(--font-mono)}
 .step .n{display:flex;flex-direction:column;align-items:center;gap:5px}
@@ -68,6 +111,7 @@ h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-
   <h1>bnr-design <span class="mono" style="font-size:14px;color:var(--ink-mut)">· styleguide v0.1</span></h1>
   <div class="sub">The single design system every BNR surface pins. Two axes of meaning, one component set. <b>Color never carries meaning alone</b> — every hue ships with an icon + text label.</div>
   <span class="concept">CONCEPT — scaffold · D-6 · zero network</span>
+  <button class="dirtog" onclick="var h=document.documentElement;h.dir=h.dir==='rtl'?'ltr':'rtl';this.textContent='dir: '+h.dir+' — flip'">dir: ltr — flip</button>
 
   <h2>Axis B — entity identity</h2>
   <div class="grid cols">
@@ -76,7 +120,11 @@ h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-
     <div class="sw"><div class="chip" style="background:var(--sovereign)"></div><div class="meta"><b>Sovereignty</b><span class="hex">#9C6FD6</span></div></div>
     <div class="sw"><div class="chip" style="background:var(--sovereign-soft)"></div><div class="meta"><b>Member seat</b><span class="hex">#B79FE0</span></div></div>
     <div class="sw"><div class="chip" style="background:var(--you)"></div><div class="meta"><b>YOU / primary</b><span class="hex">#D655BB</span></div></div>
-    <div class="sw"><div class="chip" style="background:linear-gradient(90deg,#FBFB9F,#86CC72,#45C2DC,#6FA9E0,#9C6FD6)"></div><div class="meta"><b>SKAISTS</b><span class="hex">full spectrum</span></div></div>
+    <!-- var(--rainbow), not a re-typed copy of its stops: this swatch previously
+         duplicated the token's five hexes inline, so the token and its own
+         demonstration could drift apart — the exact failure the header comment
+         warns about for tokens.css. It also mirrors for free now. -->
+    <div class="sw"><div class="chip" style="background:var(--rainbow)"></div><div class="meta"><b>SKAISTS</b><span class="hex">full spectrum</span></div></div>
   </div>
 
   <h2>Axis A — UI semantics</h2>
@@ -84,7 +132,7 @@ h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-
     <div class="sw"><div class="chip" style="background:var(--info)"></div><div class="meta"><b>Informational</b><span class="hex">#6FA9E0</span></div></div>
     <div class="sw"><div class="chip" style="background:var(--verified)"></div><div class="meta"><b>Verified</b><span class="hex">#86CC72</span></div></div>
     <div class="sw"><div class="chip" style="background:var(--guard)"></div><div class="meta"><b>Guard refusal</b><span class="hex">#B7A8F7 · not red</span></div></div>
-    <div class="sw"><div class="chip" style="background:repeating-linear-gradient(45deg,var(--line),var(--line) 6px,transparent 6px,transparent 12px)"></div><div class="meta"><b>--b-value</b><span class="hex">RESERVED · rule at wallet</span></div></div>
+    <div class="sw"><div class="chip reserved"></div><div class="meta"><b><bdi>--b-value</bdi></b><span class="hex">RESERVED · rule at wallet</span></div></div>
   </div>
 
   <h2>Semantic chips — color + icon + label</h2>
@@ -133,7 +181,42 @@ h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-
   <h2>bLOVErAi range <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-dim)">· teal → info → toward sovereign (singularity as spectrum)</span></h2>
   <div class="card"><div class="range"></div><div class="note">The AI seat isn't one hue — it travels the machine→reason→sovereign gradient as it calibrates. Icon + label still required so the range stays legible.</div></div>
 
-  <div class="footer">bnr-design v0.1 · tokens from D-1 · zero network (system fonts, no CDN) · decentralization: L1-ready · CONCEPT scaffold — components are reference, not yet a published package.</div>
+  <h2>Direction — RTL <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-dim)">· D-13</span></h2>
+  <div class="card">
+    <div class="note" style="font-size:12.5px;color:var(--ink-mut);margin-top:0">
+      Hit <b>flip</b> at the top of this page. Every component above mirrors and nothing else about it
+      changes — that is the whole gate, and it is run against <i>these</i> bytes rather than a
+      duplicate page, because a duplicate is free to drift out of agreement with what it certifies.
+    </div>
+    <div class="note" style="margin-top:var(--s2)">Three rules hold it:</div>
+    <div class="note"><b>1 · Nothing here has a side.</b> Layout is flex, grid and shorthand padding, so mirroring is the
+      browser's job, not ours. There were no <span class="mono">margin-left</span>-style properties in
+      <span class="mono">tokens.css</span> to convert — the conversion found nothing, which is the design
+      holding, not a step skipped.</div>
+    <div class="note"><b>2 · Direction is one token, in one file.</b> An angle is physical and CSS has no
+      <span class="mono">to inline-end</span>, so gradients read <span class="mono">var(--flow)</span> and
+      <span class="mono">tokens.css</span> flips it once. A gradient that hard-codes
+      <span class="mono">90deg</span> will silently refuse to mirror, and silence is why this is a token
+      rather than a convention.</div>
+    <div class="note"><b>3 · Machine strings isolate.</b> Hex, DID, hash and GRADE are LTR content whose
+      edge characters are neutrals. Unisolated on an RTL page, <span class="mono">#45C2DC</span> displays as
+      <span class="mono">45C2DC#</span> — the DOM value is intact and only the display is wrong, which is
+      precisely the failure a human eyeballing an identifier cannot catch.</div>
+    <div class="note" style="margin-top:var(--s2)">Deliberately <b>not</b> mirrored: the check, shield and person glyphs.
+      A checkmark does not reverse for an RTL reader, and mirroring icons on principle is how you end up
+      with a backwards tick.</div>
+    <div class="note" style="margin-top:var(--s2)"><b>Where the line falls.</b> Flip this page and the English sentences
+      show their full stop at the wrong end — <span class="mono">…legible.</span> renders as
+      <span class="mono">.legible…</span>. That is the same neutral-resolution mechanism as the hex case, and it is
+      left alone on purpose. The rule: <b>isolate what will never be translated, leave what will be.</b> A hex, a DID
+      and a hash are the same bytes in every locale, so they must never take direction from their surroundings.
+      Prose is the opposite — in a real RTL build these sentences are Arabic, the paragraph is genuinely RTL, and the
+      stop lands correctly with no help. Isolating prose would hard-code English's direction into the one layer that
+      is supposed to change. English text under <span class="mono">dir="rtl"</span> is an artificial state that
+      exists only for this fixture; <span class="mono">rtl-smoke.html</span> is where real RTL script is tested.</div>
+  </div>
+
+  <div class="footer">bnr-design v0.1 · tokens from D-1 · zero network (system fonts, no CDN) · decentralization: L1-ready · bidi: D-13 · CONCEPT scaffold — components are reference, not yet a published package.</div>
 </div>
 </body>
 </html>

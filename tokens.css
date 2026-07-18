@@ -9,6 +9,25 @@
 :root {
   color-scheme: dark light;
 
+  /* ---- direction (D-13) ----
+     Every token in this file is direction-agnostic BY CONSTRUCTION, and not by
+     effort: a colour, a font stack and a scale of multiples of 6 have no side.
+     There are no physical properties here to convert to logical ones — that
+     conversion found nothing to do, which is the correct outcome, not a skipped
+     step.
+
+     The one exception is a gradient. An angle is physical and CSS has no
+     logical equivalent — there is no `to inline-end`. So direction is hoisted
+     into a single token and flipped once, below; every gradient downstream
+     reads --flow instead of hard-coding a number. Add a gradient that writes
+     90deg directly and it will silently refuse to mirror.
+
+     Two angles live here, not one, because they flip differently: --flow is a
+     left-to-right sweep (90 -> 270), --hatch is a diagonal texture (45 -> 135).
+     Direction lives in exactly one file so a reviewer has one place to check. */
+  --flow:  90deg;
+  --hatch: 45deg;
+
   /* ---- Axis B · entity identity (founder-ruled) ---- */
   --ai:            #45C2DC;  /* robots / bLOVErAi — machine base */
   --ai-deep:       #57CDE4;  /* AI accents; bLOVErAi may range --ai ↔ --info */
@@ -16,7 +35,7 @@
   --sovereign:     #9C6FD6;  /* human / sovereignty · ALL SOULS */
   --sovereign-soft:#B79FE0;  /* member seats */
   --you:           #D655BB;  /* YOU / primary actor (magenta) */
-  --rainbow:       linear-gradient(90deg,#FBFB9F,#86CC72,#45C2DC,#6FA9E0,#9C6FD6); /* SKAISTS */
+  --rainbow:       linear-gradient(var(--flow),#FBFB9F,#86CC72,#45C2DC,#6FA9E0,#9C6FD6); /* SKAISTS */
 
   /* ---- Axis A · UI semantics (kernel palette law) ---- */
   --primary:       var(--you);      /* active / doing */
@@ -41,6 +60,18 @@
   --s1: 6px; --s2: 12px; --s3: 18px; --s4: 24px; --s5: 36px; --s6: 48px;
   --radius: 12px; --radius-pill: 999px;
 }
+
+/* ---- D-13 · the one flip ----
+   Written as two separate rules, deliberately, NOT as a comma-joined selector
+   list. A selector list is invalidated whole by one member a browser does not
+   understand, so pairing :dir() with [dir] in one list would drop BOTH on any
+   engine lacking :dir() — and the failure would be a silently unmirrored page,
+   not an error anyone sees. Separate rules degrade one at a time.
+   [dir] covers explicit markup; :dir() additionally catches dir="auto" once it
+   resolves. Whichever element carries the attribute redefines --flow for its
+   own subtree, so this works on <html> or on one panel. */
+[dir="rtl"] { --flow: 270deg; --hatch: 135deg; }
+:dir(rtl)   { --flow: 270deg; --hatch: 135deg; }
 
 @media (prefers-color-scheme: light) {
   :root {

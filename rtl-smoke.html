@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bnr-design · RTL bidi smoke · D-13</title>
+<!-- D-13 smoke test. This page exists to do the one thing index.html's flip toggle
+     CANNOT: put real right-to-left SCRIPT around the machine strings. Flipping dir
+     on English text mirrors the layout but never exercises the Unicode bidi
+     algorithm, because English is LTR runs inside an RTL box with no RTL runs to
+     reorder against. Only actual Arabic/Hebrew neighbours produce the failure.
+
+     Each row below shows the SAME string twice: with the rule applied, and with
+     it switched off (the control). Rows 1, 4 and 5 must differ between the two
+     columns; rows 2, 3 and 6 must NOT, because those strings are anchored by a
+     strong leading character and are safe either way. Both halves of that are
+     load-bearing — check the differing rows still differ before believing a pass,
+     and do not "fix" the rows that match.
+
+     Zero network: links tokens.css beside it, system fonts only. -->
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding:var(--s5) var(--s4) var(--s6)}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mut);margin:var(--s5) 0 var(--s3);border-bottom:1px solid var(--line);padding-bottom:6px}
+.sub{color:var(--ink-mut);font-size:13px}
+.concept{font-family:var(--font-mono);font-size:11px;color:var(--guard);border:1px dashed color-mix(in srgb,var(--guard) 55%,transparent);border-radius:var(--radius-pill);padding:4px 12px;display:inline-block;margin-top:var(--s2)}
+/* the three-column comparison is wider than a phone; it scrolls in its own box
+   rather than making the whole page scroll sideways, which on an RTL page would
+   start the reader at the wrong edge of their own document */
+.tscroll{overflow-x:auto;margin-top:var(--s2)}
+table{width:100%;min-width:520px;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-dim);font-weight:600;padding:6px 10px;border-bottom:1px solid var(--line);text-align:start}
+td{padding:10px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+/* the rule under test is the PAIR: direction fixes the inside, isolate fixes the
+   outside. An earlier draft of this fixture used isolate alone and the '+3 b'
+   row failed while the hex rows passed — strong Latin letters anchor a run, a
+   numeral-plus-unit has nothing to anchor it. Row 4 exists to keep that honest. */
+.ok{direction:ltr;unicode-bidi:isolate;font-family:var(--font-mono);color:var(--ai-deep)}
+/* the control — isolation deliberately OFF so the failure is visible, not claimed */
+.bad{unicode-bidi:normal;font-family:var(--font-mono);color:var(--ink-mut)}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--s3);margin-top:var(--s3)}
+.range{height:10px;border-radius:6px;background:linear-gradient(var(--flow),var(--ai),var(--info),var(--sovereign))}
+.rainbow{height:14px;border-radius:6px;background:var(--rainbow)}
+.step{display:flex;align-items:center;gap:0;font-size:11px;font-family:var(--font-mono);margin-top:var(--s2)}
+.step .n{display:flex;flex-direction:column;align-items:center;gap:5px}
+.step .dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--ink-dim)}
+.step .dot.on{border-color:var(--verified);background:color-mix(in srgb,var(--verified) 40%,transparent)}
+.step .dot.here{border-color:var(--you);background:color-mix(in srgb,var(--you) 40%,transparent)}
+.step .bar{flex:1;height:2px;background:var(--line);min-width:22px}
+.note{font-size:11.5px;color:var(--ink-dim);margin-top:6px}
+.warn{border:1px solid var(--guard);border-radius:var(--radius);padding:var(--s3);background:color-mix(in srgb,var(--guard) 8%,transparent);font-size:12.5px;color:var(--ink-mut);margin-top:var(--s3)}
+.warn b{color:var(--guard)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>اختبار الاتجاه · RTL bidi smoke</h1>
+  <div class="sub">صفحة اختبار — D-13. Real RTL script around machine strings.</div>
+  <span class="concept">CONCEPT · zero network · not a published surface</span>
+
+  <div class="warn">
+    <b>Language review outstanding.</b> The Arabic and Hebrew strings here are short placeholders
+    written to produce RTL runs, and have <b>not</b> been checked by a native reader. They are
+    adequate for a bidi test, which needs only correct <i>directionality</i>, and are
+    <b>not</b> adequate for anything published as localisation. Treat this page as an engineering
+    fixture, not as evidence that BNR speaks Arabic.
+  </div>
+
+  <h2>1 · Machine strings inside RTL text</h2>
+  <div class="tscroll">
+  <table>
+    <tr><th>ما هو · what</th><th>isolated — the rule</th><th>control — isolation off</th></tr>
+    <tr>
+      <td>لون · hex</td>
+      <td>اللون هو <span class="ok">#45C2DC</span> تماماً</td>
+      <td>اللون هو <span class="bad">#45C2DC</span> تماماً</td>
+    </tr>
+    <tr>
+      <td>معرّف · DID</td>
+      <td>المعرّف <span class="ok">did:bnr:z6Mkq9f2R7…4bce</span> صالح</td>
+      <td>المعرّف <span class="bad">did:bnr:z6Mkq9f2R7…4bce</span> صالح</td>
+    </tr>
+    <tr>
+      <td>بصمة · hash</td>
+      <td>البصمة <span class="ok">0x9a3f…e17c</span> مطابقة</td>
+      <td>البصمة <span class="bad">0x9a3f…e17c</span> مطابقة</td>
+    </tr>
+    <tr>
+      <td>رقم · numeral + unit</td>
+      <td>الرصيد <span class="ok">+3 b</span> من <span class="ok">420 b</span></td>
+      <td>الرصيد <span class="bad">+3 b</span> من <span class="bad">420 b</span></td>
+    </tr>
+    <tr>
+      <td>قطع · trailing ellipsis</td>
+      <td>البصمة <span class="ok">0x9a3f…</span> مقطوعة</td>
+      <td>البصمة <span class="bad">0x9a3f…</span> مقطوعة</td>
+    </tr>
+    <tr>
+      <td>עברית · Hebrew run</td>
+      <td>הערך <span class="ok">#86CC72</span> תקין</td>
+      <td>הערך <span class="bad">#86CC72</span> תקין</td>
+    </tr>
+  </table>
+  </div>
+  <div class="note">Read the <b>control</b> column. A neutral character only strands itself when it sits at an
+    <b>edge</b> of the run with nothing strong to anchor it, so the rows do not all misbehave — and saying which
+    ones should is the difference between a test and a decoration:
+    <b>rows 1, 4, 5 are expected to differ</b> (leading <span class="ok">#</span>, a numeral-plus-unit with no
+    strong letter in it at all, and a trailing <span class="ok">…</span>).
+    <b>Rows 2, 3, 6 are expected to look the same in both columns</b> — their ellipsis sits between alphanumerics
+    and their leading <span class="ok">d</span>/<span class="ok">0x</span> anchors the run, so they are safe with or
+    without the rule. They are here as the negative control: a fixture where everything fails is as untrustworthy as
+    one where everything passes.
+    <b>If rows 1, 4 or 5 stop differing, this fixture has died</b> — fix it before believing a pass.
+    In every case the DOM value is untouched and only the display is wrong, which is why this class of bug clears
+    code review and then fails a human checking an identifier by eye.</div>
+
+  <h2>2 · Ordered gradients mirror</h2>
+  <div class="card">
+    <div class="range"></div>
+    <div class="note">bLOVErAi range — machine → reason → sovereign. On this RTL page it must begin at the
+      <b>right</b>. If it still starts at the left, <span style="font-family:var(--font-mono)">--flow</span> did not
+      reach it and the bar is asserting the opposite of what it means.</div>
+    <div class="rainbow" style="margin-top:var(--s3)"></div>
+    <div class="note">SKAISTS spectrum via <span style="font-family:var(--font-mono)">var(--rainbow)</span> — same flip,
+      inherited from the token rather than restated here.</div>
+  </div>
+
+  <h2>3 · Flow components mirror without help</h2>
+  <div class="card">
+    <div class="step">
+      <div class="n"><span class="dot on"></span><span>مموّل</span></div><span class="bar"></span>
+      <div class="n"><span class="dot on"></span><span>مقفل</span></div><span class="bar"></span>
+      <div class="n"><span class="dot here"></span><span>توقيع</span></div><span class="bar"></span>
+      <div class="n"><span class="dot"></span><span>مُفرج</span></div>
+    </div>
+    <div class="note">The escrow stepper carries no direction rule of its own. It is a flex row, so it mirrors because
+      the browser mirrors it — the progression now runs right-to-left with no CSS spent on saying so. This is what
+      rule 1 buys: the components that needed no work are the evidence the system was built right, not the ones that
+      were left out.</div>
+  </div>
+
+  <div class="note" style="margin-top:var(--s6);font-family:var(--font-mono);border-top:1px solid var(--line);padding-top:var(--s3)">
+    bnr-design · D-13 RTL smoke · zero network · CONCEPT — engineering fixture, not localisation.
+  </div>
+</div>
+</body>
+</html>
