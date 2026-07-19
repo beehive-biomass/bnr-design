@@ -49,7 +49,7 @@
   --bg-card:       #0C1412;
   --ink:           #E9F2EC;
   --ink-mut:       #8FA79C;
-  --ink-dim:       #5E7A6F;
+  --ink-dim:       #648176;  /* 4.53:1 on --bg. Was #5E7A6F = 4.11 — below AA. */
   --line:          #1E2B26;
 
   /* ---- type (system stacks — zero fetch) ---- */
@@ -75,7 +75,26 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg:#FBF7F0; --bg-card:#FFFFFF; --ink:#1C1A17; --ink-mut:#6B7A72;
-    --ink-dim:#8A968F; --line:#E7E1D6;
+    --bg:#FBF7F0; --bg-card:#FFFFFF; --ink:#1C1A17; --line:#E7E1D6;
+
+    /* Light mode had no semantic palette. Every hue below kept its DARK-mode value and
+       was therefore used as text on a near-white background: --biomass measured 1.81:1,
+       --guard 1.97:1, --info 2.33:1. The system was designed dark-first and the light
+       block only ever overrode chrome, so the failure was invisible to anyone reading
+       the file — the tokens looked defined because they were, just not for this mode.
+
+       Each value below is the same hue darkened until it clears 4.5:1 on --bg #FBF7F0,
+       computed rather than chosen. Identity is preserved; legibility is added. */
+    --ink-mut:#67756D;        /* 4.52:1 — was #6B7A72 = 4.23 */
+    --ink-dim:#6A736E;        /* 4.56:1 — was #8A968F = 2.87 */
+    --ai:#2B7A8B;             /* 4.61:1 — was 1.97 */
+    --ai-deep:#2B7A8B;
+    --biomass:#527C46;        /* 4.52:1 — was 1.81 */
+    --sovereign:#865FB8;      /* 4.51:1 — was 3.48 */
+    --sovereign-soft:#865FB8;
+    --you:#B4479D;            /* 4.54:1 — was 3.35 */
+    --info:#4D759B;           /* 4.56:1 — was 2.33. The token the C-2 explainer caught. */
+    --verified:#527C46;
+    --guard:#736A9C;          /* 4.61:1 — was 1.97 */
   }
 }
