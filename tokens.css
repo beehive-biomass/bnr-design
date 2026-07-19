@@ -98,3 +98,16 @@
     --guard:#736A9C;          /* 4.61:1 — was 1.97 */
   }
 }
+
+/* ---- contrast, and how to re-check it ----
+   Every hex token above was verified against the background it is actually used on:
+   dark-mode :root values against --bg #06110C, light-mode overrides against #FBF7F0.
+   23 hex tokens, 0 below 4.5:1.
+
+   `--verified` is an alias (var(--biomass)) and carries no hex of its own, so a checker
+   scanning for hex must SKIP alias lines rather than mis-read them — an earlier pass here
+   reported a phantom "--ver 1.09" failure by matching a stale offset on an alias line.
+   A false failure is cheaper than a false pass, but both mean the checker is wrong.
+
+   Not yet done: a rendered light-mode pass over index.html in a browser. The values are
+   verified by computation; nobody has watched the styleguide render in light mode. */
