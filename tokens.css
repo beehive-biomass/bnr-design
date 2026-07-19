@@ -40,7 +40,7 @@
   /* ---- Axis A · UI semantics (kernel palette law) ---- */
   --primary:       var(--you);      /* active / doing */
   --info:          #6FA9E0;         /* informational — keep apart from --ai */
-  --verified:      var(--biomass);  /* proven / settled / alive (green allowed) */
+  --verified:      var(--biomass);  /* settled / confirmed-by-test / alive (green allowed) */
   --guard:         #B7A8F7;         /* guard refusal — NEVER error-red */
   /* --b-value: RESERVED. Rule when b gets its own surface (wallet/treasury). */
 
